@@ -1,108 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anthony Santoro</title>
   <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --text: #e5e5e5;
+      --muted: #a3a3a3;
+      --border: #262626;
+      --teal: #5eead4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
     body {
-      margin: 0;
-      padding: 0;
-      background-color: #000000;
-      color: #ffffff; /* Light text for better contrast */
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #050510;
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
+    a { color: inherit; text-decoration: none; }
+
+    .blob-container {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
     }
-    /* nav bar button styling */
-    .nav {
-      font-family: "IBM Plex Sans", sans-serif;
-      color: grey;
-      text-decoration: none;
-      font-size: 1.40rem;
-      font-weight: 500;
-      align-items: center;
-      justify-content: center;
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      mix-blend-mode: screen;
+      transition: transform 0.7s cubic-bezier(0.15, 0.85, 0.35, 1);
+      will-change: transform;
+    }
+
+    .blob-1 { width: 600px; height: 600px; background: #1e3a8a; top: 5%; left: 10%; }
+    .blob-2 { width: 700px; height: 700px; background: #4c1d95; top: 35%; left: 50%; }
+    .blob-3 { width: 500px; height: 500px; background: #1e40af; top: 55%; left: 5%; }
+    .blob-4 { width: 550px; height: 550px; background: #5b21b6; top: 15%; left: 65%; }
+
+    .layout {
       display: flex;
-      gap: 1.5rem;
-      a {color: grey; text-decoration: none;}
-      margin-top: 50px;
-
-    }
-
-    .nav:hover {
-      color: #ffffff;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    .header-container {
-      display: flex;
-      align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
-      img {
-        width: 50px;
-        height: 50px;
-        margin-right: 10px;
-        filter: drop-shadow(0 0 10px #383838);
-      }
-    }
-
-    .anthony {
-      display: flex;
       align-items: center;
-      justify-content: center;
-      margin-top: 20px;
-      font-size: 4rem;
-      font-weight: 500;
-      font-family: "IBM Plex Sans", sans-serif;
-      color: #ffffff;
-      height:70vh;
+      height: 100vh;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
-    .email {
-      text-align: center;
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 2rem;
-      font-weight: 500;
-      font-family: "IBM Plex Sans", sans-serif;
-      margin-top: -475px;
-    }
-
-    .socials
-
-    .content-box {
-      background-color: #000000;
+    .sidebar {
+      width: 380px;
+      min-width: 300px;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.5rem;
-      border-radius: 10px;
-      border: 1px solid #ffffff;
+      justify-content: center;
+      background: transparent;
+      position: relative;
+      padding: 20px;
+    }
+
+    .sidebar-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .profile-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 14px;
+    }
+
+    .profile-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
+      animation: spin 4s linear infinite;
+      z-index: 0;
+      filter: blur(8px);
+      opacity: 0.85;
+    }
+
+    .profile-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
+      animation: spin 4s linear infinite;
+      z-index: 1;
+    }
+
+    .profile-circle {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: transparent;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .profile-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .name-row {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .sidebar h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .verified-icon {
+      position: absolute;
+      left: 100%;
+      top: 11px;
+      width: 18px;
+      height: 18px;
+      margin-left: 6px;
+    }
+
+    .title-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      font-size: 1.25rem;
+    }
+
+    .title-location .title {
       color: #ffffff;
-      max-width: 500px;
-
+      font-size: 1.25rem;
     }
 
-    .content-box h2 {
-      font-family: "IBM Plex Sans", sans-serif;
-      font-size: 2rem;
-      margin-top: 0;
-      margin-bottom: 0;
-      text-align: left;
+    .title-location .location { color: #fff; }
+
+    .tagline-box {
+      background: rgba(17, 17, 17, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      width: fit-content;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
-    </style>
+    .tagline {
+      font-size: 0.94rem;
+      color: var(--text);
+      font-weight: 500;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .resume-btn-wrapper {
+      position: relative;
+      display: inline-flex;
+      padding: 2px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .resume-btn-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -100%;
+      background: conic-gradient(from 0deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000);
+      animation: spin 7s linear infinite;
+      z-index: 0;
+    }
+
+    .resume-btn-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: #111;
+      border-radius: 8px;
+      z-index: 1;
+    }
+
+    .resume-btn {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border: none;
+      transition: transform 0.15s ease;
+    }
+
+    .resume-btn:hover { transform: translateY(-1px); }
+
+    .resume-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      background: #1a1a1a;
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .sidebar-cta {
+      margin-top: 12px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .sidebar-cta h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+
+    .sidebar-cta .btn-outline {
+      display: inline-block;
+      padding: 11px 26px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .sidebar-cta .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .footer-box {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      background: rgba(17, 17, 17, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 16px;
+      width: fit-content;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 900px) {
+      html, body { overflow: auto; height: auto; }
+      .layout { height: auto; align-items: flex-start; padding: 40px 0; }
+      .sidebar { height: auto; padding: 40px 24px 100px; }
+      .footer-box { position: static; transform: none; margin: 40px auto 0; }
+    }
+  </style>
 </head>
 <body>
 
-  <h2 class="anthony">Anthony Santoro</h2>
-  <h3 class="email">anthony@santoro.sh<a href="mailto:anthony@santoro.sh">
+  <div class="blob-container">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="profile-wrapper">
+          <div class="profile-circle">
+            <img src="pic.jpg" alt="Anthony Santoro" />
+          </div>
+        </div>
+
+        <div class="name-row">
+          <h1>Anthony Santoro</h1>
+          <img class="verified-icon" src="https://img.icons8.com/ios-glyphs/90/228BE6/verified-account--v2.png" alt="verified" />
+        </div>
+
+        <div class="title-location">
+          <span class="title">Freelance</span>
+          <span class="location">📍 Gainesville, FL 🇺🇸</span>
+        </div>
+
+        <div class="tagline-box">
+          <p class="tagline">I enjoy messing around with software.</p>
+        </div>
+
+        <div class="btn-row">
+          <div class="resume-btn-wrapper">
+            <a href="#" class="resume-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h6v6h6v10H6z"/>
+                <path d="M8 12h8v2H8zm0 4h5v2H8z"/>
+              </svg>
+              Resume
+            </a>
+          </div>
+
+          <a href="https://github.com/anthonysantoro" target="_blank" rel="noopener" class="icon-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+            </svg>
+          </a>
+
+          <a href="https://x.com/realasantoro" target="_blank" rel="noopener" class="icon-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+            </svg>
+          </a>
+
+          <a href="mailto:anthony@santoro.sh" class="icon-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="sidebar-cta">
+          <h2>Want to work together?</h2>
+          <a href="mailto:anthony@santoro.sh" class="btn-outline">Contact</a>
+        </div>
+      </div>
+
+      <footer class="footer-box">© Anthony Santoro</footer>
+    </aside>
+  </div>
+
+  <script>
+    const blobs = document.querySelectorAll('.blob');
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 50;
+      const y = (e.clientY / window.innerHeight - 0.5) * 50;
+
+      blobs.forEach((blob, i) => {
+        const factor = (i + 1) * 0.35;
+        blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+      });
+    });
+  </script>
+</body>
+</html>
